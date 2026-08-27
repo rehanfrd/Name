@@ -30,10 +30,13 @@ jobs:
           flutter create --platforms=android --org=com.rehan.revision .
           flutter pub upgrade
 
-      # YEH NAYA STEP HAI JO MIN-SDK ERROR KO HAMESHA KE LIYE FIX KAREGA
-      - name: Fix minSdkVersion for Music Player
+      - name: Fix minSdk and Inject Permissions
         run: |
+          # 1. minSdk ko 23 par set karega (Build error fix)
           sed -i 's/minSdkVersion flutter.minSdkVersion/minSdkVersion 23/g' android/app/build.gradle
+          
+          # 2. Storage aur Audio ki permissions add karega (App crash fix)
+          sed -i '/<application/i \    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>\n    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO"/>' android/app/src/main/AndroidManifest.xml
 
       - name: Build APK
         run: flutter build apk --release
