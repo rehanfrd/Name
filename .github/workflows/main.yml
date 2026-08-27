@@ -30,7 +30,7 @@ jobs:
           rm -rf android
           flutter create --platforms=android .
           flutter pub get
-          sed -i 's/minSdkVersion flutter\.minSdkVersion/minSdkVersion 23/g' android/app/build.gradle
+          sed -i 's/minSdk = flutter.minSdkVersion/minSdk = 23/g' android/app/build.gradle.kts
           flutter build apk --release
 
       - name: Upload APK
