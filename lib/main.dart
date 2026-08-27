@@ -23,10 +23,9 @@ class _MyLibraryAppState extends State<MyLibraryApp> {
   late int _themeIndex;
 
   final List<ThemeData> _themes = [
-    ThemeData(primarySwatch: Colors.brown, scaffoldBackgroundColor: Color(0xFFF4ECD8), fontFamily: 'Georgia'), // Sepia (Eye Comfort)
-    ThemeData.dark().copyWith(scaffoldBackgroundColor: Color(0xFF121212)), // Dark Mode
-    ThemeData(primarySwatch: Colors.blueGrey, scaffoldBackgroundColor: Colors.white, fontFamily: 'Georgia'), // Classic White
-    ThemeData(primarySwatch: Colors.teal, scaffoldBackgroundColor: Color(0xFFE8F5E9), fontFamily: 'Georgia'), // Mint Green
+    ThemeData(primarySwatch: Colors.brown, scaffoldBackgroundColor: Color(0xFFF4ECD8), fontFamily: 'Georgia'), 
+    ThemeData.dark().copyWith(scaffoldBackgroundColor: Color(0xFF121212)),
+    ThemeData(primarySwatch: Colors.blueGrey, scaffoldBackgroundColor: Colors.white, fontFamily: 'Georgia'),
   ];
 
   @override
