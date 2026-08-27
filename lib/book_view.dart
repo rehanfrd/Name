@@ -52,11 +52,7 @@ class _BookViewScreenState extends State<BookViewScreen> {
         elevation: 0,
         foregroundColor: isDark ? Colors.white : Colors.brown[900],
         actions: [
-          IconButton(
-            icon: Icon(Icons.format_list_bulleted), // Index Icon
-            onPressed: _openIndex,
-            tooltip: "Jump to Page",
-          )
+          IconButton(icon: Icon(Icons.format_list_bulleted), onPressed: _openIndex)
         ],
       ),
       body: pages.isEmpty
@@ -67,11 +63,9 @@ class _BookViewScreenState extends State<BookViewScreen> {
               itemBuilder: (context, index) {
                 final page = pages[index];
                 return Container(
-                  margin: EdgeInsets.zero, // FIX: Full Screen Page
+                  margin: EdgeInsets.zero,
                   padding: EdgeInsets.all(25),
-                  decoration: BoxDecoration(
-                    color: isDark ? Colors.grey[900] : Color(0xFFFAFAFA),
-                  ),
+                  decoration: BoxDecoration(color: isDark ? Colors.grey[900] : Color(0xFFFAFAFA)),
                   child: SingleChildScrollView(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,7 +98,7 @@ class _BookViewScreenState extends State<BookViewScreen> {
             ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        foregroundColor: Colors.white, // FIX: Plus Icon white
+        foregroundColor: Colors.white,
         backgroundColor: isDark ? Colors.blueGrey : Colors.brown[800],
         onPressed: () async {
           await Navigator.push(context, MaterialPageRoute(builder: (context) => AddPageScreen(
