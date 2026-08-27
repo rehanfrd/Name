@@ -25,18 +25,23 @@ jobs:
         with:
           channel: 'stable'
 
-      - name: Generate Complete Android Native Files
+      # Is ek single step mein saara kaam safe tarike se hoga
+      - name: Master Build Step
         run: |
-          flutter create --overwrite --platforms=android --org=com.rehan.revision .
-          flutter pub upgrade
-
-      - name: Fix minSdk and Inject Permissions
-        run: |
-          sed -i 's/minSdkVersion flutter.minSdkVersion/minSdkVersion 23/g' android/app/build.gradle
-          sed -i '/<application/i \    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>\n    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO"/>' android/app/src/main/AndroidManifest.xml
-
-      - name: Build APK
-        run: flutter build apk --release
+          # 1. Puraana kachra saaf karein taaki koi conflict na ho
+          rm -rf android
+          
+          # 2. Fresh Android files banayein
+          flutter create --platforms=android .
+          
+          # 3. Packages update karein
+          flutter pub get
+          
+          # 4. Official tarike se minSdk 23 set karein (Bina file edit kiye)
+          echo "flutter.minSdkVersion=23" >> android/local.properties
+          
+          # 5. App ka APK banayein
+          flutter build apk --release
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
