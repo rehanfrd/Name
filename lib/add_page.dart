@@ -13,7 +13,7 @@ class AddPageScreen extends StatefulWidget {
 class _AddPageScreenState extends State<AddPageScreen> {
   final _titleController = TextEditingController();
   final _meaningController = TextEditingController();
-  List<TextEditingController> _exampleControllers = [TextEditingController()]; // By default 1 example box
+  List<TextEditingController> _exampleControllers = [TextEditingController()]; 
 
   void _addExampleField() {
     setState(() { _exampleControllers.add(TextEditingController()); });
@@ -57,8 +57,6 @@ class _AddPageScreenState extends State<AddPageScreen> {
             SizedBox(height: 20),
             Align(alignment: Alignment.centerLeft, child: Text("Examples:", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
             SizedBox(height: 10),
-            
-            // Dynamic Example Fields
             ...List.generate(_exampleControllers.length, (index) {
               return Padding(
                 padding: const EdgeInsets.only(bottom: 10),
@@ -74,7 +72,6 @@ class _AddPageScreenState extends State<AddPageScreen> {
                 ),
               );
             }),
-            
             SizedBox(height: 30),
             ElevatedButton(
               style: ElevatedButton.styleFrom(minimumSize: Size(double.infinity, 55)),
