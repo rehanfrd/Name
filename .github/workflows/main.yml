@@ -30,6 +30,11 @@ jobs:
           flutter create --platforms=android --org=com.rehan.revision .
           flutter pub upgrade
 
+      # YEH NAYA STEP HAI JO MIN-SDK ERROR KO HAMESHA KE LIYE FIX KAREGA
+      - name: Fix minSdkVersion for Music Player
+        run: |
+          sed -i 's/minSdkVersion flutter.minSdkVersion/minSdkVersion 23/g' android/app/build.gradle
+
       - name: Build APK
         run: flutter build apk --release
 
