@@ -25,22 +25,12 @@ jobs:
         with:
           channel: 'stable'
 
-      # Is ek single step mein saara kaam safe tarike se hoga
       - name: Master Build Step
         run: |
-          # 1. Puraana kachra saaf karein taaki koi conflict na ho
           rm -rf android
-          
-          # 2. Fresh Android files banayein
           flutter create --platforms=android .
-          
-          # 3. Packages update karein
           flutter pub get
-          
-          # 4. Official tarike se minSdk 23 set karein (Bina file edit kiye)
-          echo "flutter.minSdkVersion=23" >> android/local.properties
-          
-          # 5. App ka APK banayein
+          sed -i 's/minSdkVersion flutter\.minSdkVersion/minSdkVersion 23/g' android/app/build.gradle
           flutter build apk --release
 
       - name: Upload APK
