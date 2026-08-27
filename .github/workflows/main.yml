@@ -5,7 +5,7 @@ on:
     branches:
       - main
       - master
-  workflow_dispatch: # Isse aap manually bhi trigger kar sakte hain
+  workflow_dispatch:
 
 jobs:
   build:
@@ -28,7 +28,7 @@ jobs:
       - name: Generate Complete Android Native Files
         run: |
           flutter create --platforms=android --org=com.rehan.revision .
-          flutter pub get
+          flutter pub upgrade
 
       - name: Build APK
         run: flutter build apk --release
