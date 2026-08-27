@@ -11,13 +11,6 @@ dependencies:
     sdk: flutter
   shared_preferences: ^2.2.3
   cupertino_icons: ^1.0.6
-  # Version lock (Bina ^ ke)
-  audioplayers: 6.0.0
-  file_picker: 8.0.3
-
-# API 36 Error ko block karne ke liye override
-dependency_overrides:
-  flutter_plugin_android_lifecycle: 2.0.20
 
 dev_dependencies:
   flutter_test:
