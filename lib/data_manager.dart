@@ -9,7 +9,6 @@ class DataManager {
     final String? data = prefs.getString(_key);
     
     if (data == null) {
-      // Pehli baar khulne par Default Tense Book
       List<Map<String, dynamic>> defaultBook = [_defaultTenseBook()];
       await saveBooks(defaultBook);
       return defaultBook;
@@ -28,31 +27,9 @@ class DataManager {
       "title": "Tense Mastery (Grammar)",
       "pages": [
         {
-          "title": "Present Simple Tense",
-          "meaning": "Aadatein (Habits), Sach (Facts) aur Routine batane ke liye.",
-          "examples": [
-            "Affirmative: Sub + V1 (s/es) + Obj -> He goes to school.",
-            "Negative: Sub + do/does + not + V1 + Obj -> He does not go to school.",
-            "Interrogative: Do/Does + Sub + V1 + Obj? -> Does he go to school?"
-          ]
-        },
-        {
-          "title": "Present Continuous Tense",
-          "meaning": "Jo kaam abhi is waqt ho raha hai.",
-          "examples": [
-            "Affirmative: Sub + is/am/are + V4(ing) + Obj -> I am playing.",
-            "Negative: Sub + is/am/are + not + V4(ing) + Obj -> I am not playing.",
-            "Interrogative: Is/Am/Are + Sub + V4(ing) + Obj? -> Am I playing?"
-          ]
-        },
-        {
-          "title": "Past Simple Tense",
-          "meaning": "Jo kaam beete hue kal me poora ho gaya.",
-          "examples": [
-            "Affirmative: Sub + V2 + Obj -> I played cricket.",
-            "Negative: Sub + did + not + V1 + Obj -> I did not play cricket.",
-            "Interrogative: Did + Sub + V1 + Obj? -> Did I play cricket?"
-          ]
+          "title": "Present Simple",
+          "meaning": "Aadatein (Habits), Sach (Facts) batane ke liye.",
+          "examples": ["He goes to school.", "Does he go to school?"]
         }
       ]
     };
