@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'data_manager.dart';
 import 'main.dart';
 import 'book_view.dart';
+import 'music_player.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -35,16 +36,10 @@ class _HomeScreenState extends State<HomeScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text("Create a New Book"),
-        content: TextField(controller: _bookController, decoration: InputDecoration(hintText: "Enter Book Title (e.g., Vocabulary)")),
+        content: TextField(controller: _bookController, decoration: InputDecoration(hintText: "Enter Book Title")),
         actions: [
           TextButton(onPressed: () => Navigator.pop(context), child: Text("Cancel")),
-          ElevatedButton(
-            onPressed: () {
-              _createNewBook(_bookController.text);
-              Navigator.pop(context);
-            },
-            child: Text("Create"),
-          )
+          ElevatedButton(onPressed: () { _createNewBook(_bookController.text); Navigator.pop(context); }, child: Text("Create"))
         ],
       ),
     );
@@ -67,12 +62,20 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             DrawerHeader(
               decoration: BoxDecoration(color: isDark ? Colors.grey[900] : Colors.brown[700]),
-              child: Text('Settings & Themes', style: TextStyle(color: Colors.white, fontSize: 24)),
+              child: Text('Settings & Tools', style: TextStyle(color: Colors.white, fontSize: 24)),
             ),
+            ListTile(
+              leading: Icon(Icons.music_note, color: Colors.blue),
+              title: Text('Music Player'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => MusicPlayerScreen()));
+              },
+            ),
+            Divider(),
             ListTile(leading: Icon(Icons.menu_book), title: Text('Eye Comfort (Sepia)'), onTap: () => MyLibraryApp.of(context)?.changeTheme(0)),
             ListTile(leading: Icon(Icons.dark_mode), title: Text('Dark Mode'), onTap: () => MyLibraryApp.of(context)?.changeTheme(1)),
             ListTile(leading: Icon(Icons.wb_sunny), title: Text('Classic White'), onTap: () => MyLibraryApp.of(context)?.changeTheme(2)),
-            ListTile(leading: Icon(Icons.eco), title: Text('Mint Green'), onTap: () => MyLibraryApp.of(context)?.changeTheme(3)),
           ],
         ),
       ),
@@ -84,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
           return GestureDetector(
             onTap: () async {
               await Navigator.push(context, MaterialPageRoute(builder: (context) => BookViewScreen(bookIndex: index, books: books)));
-              _loadData(); // Refresh on back
+              _loadData();
             },
             child: Container(
               decoration: BoxDecoration(
@@ -107,6 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
         onPressed: _showAddBookDialog,
         icon: Icon(Icons.add),
         label: Text("New Book"),
+        foregroundColor: Colors.white, // FIX: Text color white
         backgroundColor: isDark ? Colors.blueGrey : Colors.brown[800],
       ),
     );
