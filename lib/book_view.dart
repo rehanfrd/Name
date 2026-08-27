@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'add_page.dart';
-import 'data_manager.dart';
 
 class BookViewScreen extends StatefulWidget {
   final int bookIndex;
@@ -13,11 +12,33 @@ class BookViewScreen extends StatefulWidget {
 
 class _BookViewScreenState extends State<BookViewScreen> {
   late List<dynamic> pages;
+  final PageController _pageController = PageController();
 
   @override
   void initState() {
     super.initState();
     pages = widget.books[widget.bookIndex]["pages"];
+  }
+
+  void _openIndex() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return ListView.builder(
+          itemCount: pages.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+              leading: CircleAvatar(child: Text("${index + 1}")),
+              title: Text(pages[index]["title"]),
+              onTap: () {
+                _pageController.jumpToPage(index);
+                Navigator.pop(context);
+              },
+            );
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -30,20 +51,26 @@ class _BookViewScreenState extends State<BookViewScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         foregroundColor: isDark ? Colors.white : Colors.brown[900],
+        actions: [
+          IconButton(
+            icon: Icon(Icons.format_list_bulleted), // Index Icon
+            onPressed: _openIndex,
+            tooltip: "Jump to Page",
+          )
+        ],
       ),
       body: pages.isEmpty
           ? Center(child: Text("This book is empty.\nTap + to add a page.", textAlign: TextAlign.center, style: TextStyle(fontSize: 18)))
           : PageView.builder(
+              controller: _pageController,
               itemCount: pages.length,
               itemBuilder: (context, index) {
                 final page = pages[index];
                 return Container(
-                  margin: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+                  margin: EdgeInsets.zero, // FIX: Full Screen Page
                   padding: EdgeInsets.all(25),
                   decoration: BoxDecoration(
                     color: isDark ? Colors.grey[900] : Color(0xFFFAFAFA),
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10)],
                   ),
                   child: SingleChildScrollView(
                     child: Column(
@@ -77,6 +104,7 @@ class _BookViewScreenState extends State<BookViewScreen> {
             ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
+        foregroundColor: Colors.white, // FIX: Plus Icon white
         backgroundColor: isDark ? Colors.blueGrey : Colors.brown[800],
         onPressed: () async {
           await Navigator.push(context, MaterialPageRoute(builder: (context) => AddPageScreen(
