@@ -30,6 +30,29 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {});
   }
 
+  Future<void> _downloadPdf(Map<String, dynamic> book) async {
+    final pdf = pw.Document();
+    pdf.addPage(
+      pw.MultiPage(
+        build: (context) => [
+          pw.Header(level: 0, child: pw.Text(book["title"], style: pw.TextStyle(fontSize: 30, fontWeight: pw.FontWeight.bold))),
+          ...book["pages"].map((page) => pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.SizedBox(height: 20),
+              pw.Text(page["title"], style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold)),
+              pw.Text("Meaning: ${page["meaning"]}", style: pw.TextStyle(fontSize: 16)),
+              pw.SizedBox(height: 10),
+              pw.Text("Examples:", style: pw.TextStyle(fontSize: 14, fontStyle: pw.FontStyle.italic)),
+              ...page["examples"].map((ex) => pw.Bullet(text: ex, style: pw.TextStyle(fontSize: 14))),
+            ]
+          )).toList(),
+        ],
+      ),
+    );
+    await Printing.layoutPdf(onLayout: (format) async => pdf.save(), name: "${book['title']}.pdf");
+  }
+
   void _showBookOptions(int index) {
     showModalBottomSheet(
       backgroundColor: Theme.of(context).cardColor,
@@ -41,7 +64,8 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: const EdgeInsets.all(15.0),
             child: Text("Book Options", style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 16, fontWeight: FontWeight.bold)),
           ),
-          ListTile(leading: Icon(Icons.edit, color: Theme.of(context).primaryColor), title: Text("Edit Book Title"), onTap: () { Navigator.pop(context); _showAddEditDialog(index: index); }),
+          ListTile(leading: Icon(Icons.picture_as_pdf, color: Theme.of(context).primaryColor), title: Text("Download PDF"), onTap: () { Navigator.pop(context); _downloadPdf(books[index]); }),
+          ListTile(leading: Icon(Icons.edit, color: Theme.of(context).primaryColor), title: Text("Edit Title"), onTap: () { Navigator.pop(context); _showAddEditDialog(index: index); }),
           ListTile(leading: const Icon(Icons.delete, color: Colors.redAccent), title: const Text("Delete Book", style: TextStyle(color: Colors.redAccent)), onTap: () { Navigator.pop(context); books.removeAt(index); _saveBooks(); }),
           const SizedBox(height: 20),
         ],
@@ -87,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       _saveBooks();
                       Navigator.pop(context);
                     },
-                    child: Text(index == null ? "Create Book" : "Save Changes", style: TextStyle(color: Theme.of(context).scaffoldBackgroundColor, fontWeight: FontWeight.bold)),
+                    child: Text(index == null ? "Create Book" : "Save", style: TextStyle(color: Theme.of(context).scaffoldBackgroundColor, fontWeight: FontWeight.bold)),
                   )
                 ],
               )
@@ -104,12 +128,12 @@ class _HomeScreenState extends State<HomeScreen> {
         color: Theme.of(context).cardColor,
         borderRadius: const BorderRadius.only(topRight: Radius.circular(12), bottomRight: Radius.circular(12), topLeft: Radius.circular(4), bottomLeft: Radius.circular(4)),
         boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 6, offset: Offset(3, 3))],
-        border: Border(left: BorderSide(color: Theme.of(context).primaryColor, width: 14)), // Book Spine
+        border: Border(left: BorderSide(color: Theme.of(context).primaryColor, width: 14)), 
       ),
       child: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: Text(title, textAlign: TextAlign.center, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, fontFamily: 'Georgia')),
+          child: Text(title, textAlign: TextAlign.center, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, fontFamily: 'Georgia')),
         ),
       ),
     );
