@@ -23,12 +23,12 @@ class _MyLibraryAppState extends State<MyLibraryApp> {
   late int _themeIndex;
 
   final List<ThemeData> _themes = [
-    // 0: Halka Dark (Premium Luxury)
+    // 0: Premium Dark
     ThemeData(
       brightness: Brightness.dark,
-      primaryColor: const Color(0xFFD4AF37), // Gold
+      primaryColor: const Color(0xFFD4AF37),
       scaffoldBackgroundColor: const Color(0xFF25252B),
-      cardColor: const Color(0xFF33333D), // Page color
+      cardColor: const Color(0xFF33333D),
       appBarTheme: const AppBarTheme(backgroundColor: Color(0xFF25252B), foregroundColor: Color(0xFFD4AF37), elevation: 0),
     ), 
     // 1: Pitch Black
@@ -39,7 +39,7 @@ class _MyLibraryAppState extends State<MyLibraryApp> {
       cardColor: const Color(0xFF151515),
       appBarTheme: const AppBarTheme(backgroundColor: Colors.black, foregroundColor: Colors.white, elevation: 0),
     ),
-    // 2: Classic Book (White/Sepia)
+    // 2: Classic Book
     ThemeData(
       brightness: Brightness.light,
       primaryColor: Colors.brown[900],
