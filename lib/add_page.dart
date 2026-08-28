@@ -4,7 +4,8 @@ import 'data_manager.dart';
 class AddPageScreen extends StatefulWidget {
   final int bookIndex;
   final List<Map<String, dynamic>> books;
-  AddPageScreen({required this.bookIndex, required this.books});
+  final int? editPageIndex;
+  AddPageScreen({required this.bookIndex, required this.books, this.editPageIndex});
 
   @override
   _AddPageScreenState createState() => _AddPageScreenState();
@@ -14,6 +15,18 @@ class _AddPageScreenState extends State<AddPageScreen> {
   final _titleController = TextEditingController();
   final _meaningController = TextEditingController();
   List<TextEditingController> _exampleControllers = [TextEditingController()]; 
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.editPageIndex != null) {
+      final page = widget.books[widget.bookIndex]["pages"][widget.editPageIndex!];
+      _titleController.text = page["title"];
+      _meaningController.text = page["meaning"];
+      _exampleControllers = (page["examples"] as List).map((ex) => TextEditingController(text: ex)).toList();
+      if (_exampleControllers.isEmpty) _exampleControllers.add(TextEditingController());
+    }
+  }
 
   void _addExampleField() {
     setState(() { _exampleControllers.add(TextEditingController()); });
@@ -27,11 +40,17 @@ class _AddPageScreenState extends State<AddPageScreen> {
       if (controller.text.isNotEmpty) examples.add(controller.text);
     }
 
-    widget.books[widget.bookIndex]["pages"].add({
+    final newPage = {
       "title": _titleController.text,
       "meaning": _meaningController.text,
       "examples": examples,
-    });
+    };
+
+    if (widget.editPageIndex == null) {
+      widget.books[widget.bookIndex]["pages"].add(newPage);
+    } else {
+      widget.books[widget.bookIndex]["pages"][widget.editPageIndex!] = newPage;
+    }
 
     await DataManager.saveBooks(widget.books);
     Navigator.pop(context);
@@ -43,8 +62,9 @@ class _AddPageScreenState extends State<AddPageScreen> {
     Color inputColor = isDark ? Colors.grey[800]! : Colors.white;
 
     return Scaffold(
+      backgroundColor: isDark ? Color(0xFF1E1E2C) : Color(0xFFF4ECD8),
       appBar: AppBar(
-        title: Text('Add New Page'),
+        title: Text(widget.editPageIndex == null ? 'Add New Page' : 'Edit Page'),
         actions: [IconButton(icon: Icon(Icons.check, size: 30), onPressed: _savePage)],
       ),
       body: SingleChildScrollView(
@@ -74,9 +94,9 @@ class _AddPageScreenState extends State<AddPageScreen> {
             }),
             SizedBox(height: 30),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(minimumSize: Size(double.infinity, 55)),
+              style: ElevatedButton.styleFrom(minimumSize: Size(double.infinity, 55), backgroundColor: Colors.deepPurpleAccent),
               onPressed: _savePage,
-              child: Text('Save Page', style: TextStyle(fontSize: 18)),
+              child: Text('Save Page', style: TextStyle(fontSize: 18, color: Colors.white)),
             )
           ],
         ),
