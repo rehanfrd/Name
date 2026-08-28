@@ -22,10 +22,24 @@ class MyLibraryApp extends StatefulWidget {
 class _MyLibraryAppState extends State<MyLibraryApp> {
   late int _themeIndex;
 
+  // Themes list
   final List<ThemeData> _themes = [
-    ThemeData(primarySwatch: Colors.brown, scaffoldBackgroundColor: Color(0xFFF4ECD8), fontFamily: 'Georgia'), 
-    ThemeData.dark().copyWith(scaffoldBackgroundColor: Color(0xFF121212)),
-    ThemeData(primarySwatch: Colors.blueGrey, scaffoldBackgroundColor: Colors.white, fontFamily: 'Georgia'),
+    // 0: Halka Dark (Premium Luxury Theme - Default now)
+    ThemeData(
+      primarySwatch: Colors.brown,
+      scaffoldBackgroundColor: const Color(0xFF25252B), // Halka Dark Charcoal
+      fontFamily: 'Georgia',
+    ), 
+    // 1: Pitch Black (Dark Mode)
+    ThemeData.dark().copyWith(
+      scaffoldBackgroundColor: const Color(0xFF121212),
+    ),
+    // 2: Classic White
+    ThemeData(
+      primarySwatch: Colors.blueGrey,
+      scaffoldBackgroundColor: Colors.white,
+      fontFamily: 'Georgia',
+    ),
   ];
 
   @override
