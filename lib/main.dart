@@ -22,23 +22,30 @@ class MyLibraryApp extends StatefulWidget {
 class _MyLibraryAppState extends State<MyLibraryApp> {
   late int _themeIndex;
 
-  // Themes list
   final List<ThemeData> _themes = [
-    // 0: Halka Dark (Premium Luxury Theme - Default now)
+    // 0: Halka Dark (Premium Luxury)
     ThemeData(
-      primarySwatch: Colors.brown,
-      scaffoldBackgroundColor: const Color(0xFF25252B), // Halka Dark Charcoal
-      fontFamily: 'Georgia',
+      brightness: Brightness.dark,
+      primaryColor: const Color(0xFFD4AF37), // Gold
+      scaffoldBackgroundColor: const Color(0xFF25252B),
+      cardColor: const Color(0xFF33333D), // Page color
+      appBarTheme: const AppBarTheme(backgroundColor: Color(0xFF25252B), foregroundColor: Color(0xFFD4AF37), elevation: 0),
     ), 
-    // 1: Pitch Black (Dark Mode)
-    ThemeData.dark().copyWith(
-      scaffoldBackgroundColor: const Color(0xFF121212),
-    ),
-    // 2: Classic White
+    // 1: Pitch Black
     ThemeData(
-      primarySwatch: Colors.blueGrey,
-      scaffoldBackgroundColor: Colors.white,
-      fontFamily: 'Georgia',
+      brightness: Brightness.dark,
+      primaryColor: Colors.white,
+      scaffoldBackgroundColor: Colors.black,
+      cardColor: const Color(0xFF151515),
+      appBarTheme: const AppBarTheme(backgroundColor: Colors.black, foregroundColor: Colors.white, elevation: 0),
+    ),
+    // 2: Classic Book (White/Sepia)
+    ThemeData(
+      brightness: Brightness.light,
+      primaryColor: Colors.brown[900],
+      scaffoldBackgroundColor: const Color(0xFFF4ECD8),
+      cardColor: Colors.white,
+      appBarTheme: AppBarTheme(backgroundColor: const Color(0xFFF4ECD8), foregroundColor: Colors.brown[900], elevation: 0),
     ),
   ];
 
