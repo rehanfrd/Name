@@ -1,5 +1,5 @@
 name: daily_revision_book
-description: A daily vocabulary revision app.
+description: A premium daily vocabulary revision app.
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -9,18 +9,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_localizations:
-    sdk: flutter
   shared_preferences: ^2.2.3
   cupertino_icons: ^1.0.6
   pdf: ^3.11.0
   printing: ^5.12.0
-  flutter_quill: 8.0.0
-
-# YAHAN DONO PACKAGES KE ERROR KO HAMESHA KE LIYE KILLED (OVERRIDE) KIYA GAYA HAI
-dependency_overrides:
-  intl: any
-  flutter_keyboard_visibility: ^6.0.0
 
 dev_dependencies:
   flutter_test:
