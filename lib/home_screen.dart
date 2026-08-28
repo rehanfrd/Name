@@ -74,8 +74,9 @@ class _HomeScreenState extends State<HomeScreen> {
     TextEditingController _ctrl = TextEditingController(text: index != null ? books[index]["title"] : "");
     showDialog(
       context: context,
-      backgroundColor: Colors.transparent,
       builder: (context) => Dialog(
+        backgroundColor: Colors.transparent, // Correct placement for background color
+        elevation: 0,
         child: _glassContainer(
           child: Padding(
             padding: EdgeInsets.all(20),
