@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'data_manager.dart';
 import 'add_page.dart';
 
@@ -27,7 +25,6 @@ class _BookViewScreenState extends State<BookViewScreen> {
   }
 
   void _showPageOptions(int pageIndex, Map<String, dynamic> actualPage) {
-    // Find real index in original list in case search is active
     int realIndex = pages.indexOf(actualPage);
     
     showModalBottomSheet(
@@ -93,14 +90,6 @@ class _BookViewScreenState extends State<BookViewScreen> {
                     itemCount: filteredPages.length,
                     itemBuilder: (context, index) {
                       final page = filteredPages[index];
-                      
-                      // MS Word (Rich Text) ka data nikalna
-                      QuillController? _quillController;
-                      if (page.containsKey("contentJson")) {
-                        final doc = Document.fromJson(jsonDecode(page["contentJson"]));
-                        _quillController = QuillController(document: doc, selection: const TextSelection.collapsed(offset: 0));
-                      }
-
                       return GestureDetector(
                         onLongPress: () => _showPageOptions(index, page),
                         child: Container(
@@ -109,44 +98,38 @@ class _BookViewScreenState extends State<BookViewScreen> {
                             color: Theme.of(context).cardColor,
                             borderRadius: const BorderRadius.only(topRight: Radius.circular(15), bottomRight: Radius.circular(15)),
                             boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 5, spreadRadius: 1)],
-                            border: Border(left: BorderSide(color: Theme.of(context).primaryColor, width: 8)), // Page Spine
+                            border: Border(left: BorderSide(color: Theme.of(context).primaryColor, width: 8)), 
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(20.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Center(child: Text("(Long press to Edit/Delete)", style: TextStyle(fontSize: 12, color: Colors.grey))),
-                                const SizedBox(height: 10),
-                                Text(page["title"], style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
-                                const Divider(thickness: 2, height: 30),
-                                
-                                // Content Area
-                                Expanded(
-                                  child: _quillController != null 
-                                      ? QuillEditor.basic(controller: _quillController, readOnly: true) // Naya Word jaisa UI
-                                      : SingleChildScrollView( // Purana data support
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(page["meaning"] ?? "", style: const TextStyle(fontSize: 20)),
-                                              const SizedBox(height: 20),
-                                              if (page["examples"] != null)
-                                                ...List.generate(page["examples"].length, (exIndex) => Padding(
-                                                  padding: const EdgeInsets.only(bottom: 10),
-                                                  child: Row(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      const Text("• ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                                                      Expanded(child: Text(page["examples"][exIndex], style: const TextStyle(fontSize: 18, fontStyle: FontStyle.italic))),
-                                                    ],
-                                                  ),
-                                                ))
-                                            ],
-                                          ),
-                                        ),
-                                ),
-                              ],
+                            child: SingleChildScrollView(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Center(child: Text("(Long press anywhere to Edit/Delete)", style: TextStyle(fontSize: 12, color: Colors.grey))),
+                                  const SizedBox(height: 10),
+                                  Text(page["title"], style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+                                  const Divider(thickness: 2, height: 30),
+                                  const Text("Meaning / Detail:", style: TextStyle(fontSize: 14, color: Colors.grey)),
+                                  const SizedBox(height: 5),
+                                  Text(page["meaning"], style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
+                                  const SizedBox(height: 25),
+                                  const Text("Examples:", style: TextStyle(fontSize: 14, color: Colors.grey)),
+                                  const SizedBox(height: 10),
+                                  ...List.generate(page["examples"].length, (exIndex) {
+                                    return Padding(
+                                      padding: const EdgeInsets.only(bottom: 15),
+                                      child: Row(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const Text("• ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                                          Expanded(child: Text(page["examples"][exIndex], style: const TextStyle(fontSize: 18, fontStyle: FontStyle.italic, height: 1.4))),
+                                        ],
+                                      ),
+                                    );
+                                  })
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -155,7 +138,7 @@ class _BookViewScreenState extends State<BookViewScreen> {
                   ),
                 ),
                 
-                // PAGE NAVIGATION BUTTONS
+                // PAGE SWITCH BUTTONS
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   child: Row(
