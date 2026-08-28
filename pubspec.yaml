@@ -17,6 +17,10 @@ dependencies:
   printing: ^5.12.0
   flutter_quill: 8.0.0
 
+# YEH NAYA OVERRIDE ERROR KO HAMESHA KE LIYE FIX KAREGA
+dependency_overrides:
+  intl: any
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
