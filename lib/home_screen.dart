@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -56,16 +55,20 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _showBookOptions(int index) {
     showModalBottomSheet(
-      backgroundColor: Colors.transparent,
+      backgroundColor: const Color(0xFF33333D), // Premium solid dark background
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       context: context,
-      builder: (context) => _glassContainer(
-        child: Wrap(
-          children: [
-            ListTile(leading: Icon(Icons.picture_as_pdf, color: Colors.white), title: Text("Download PDF", style: TextStyle(color: Colors.white)), onTap: () { Navigator.pop(context); _downloadPdf(books[index]); }),
-            ListTile(leading: Icon(Icons.edit, color: Colors.white), title: Text("Edit Title", style: TextStyle(color: Colors.white)), onTap: () { Navigator.pop(context); _showAddEditDialog(index: index); }),
-            ListTile(leading: Icon(Icons.delete, color: Colors.redAccent), title: Text("Delete Book", style: TextStyle(color: Colors.redAccent)), onTap: () { Navigator.pop(context); books.removeAt(index); _saveBooks(); }),
-          ],
-        ),
+      builder: (context) => Wrap(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Text("Book Options", style: TextStyle(color: Colors.white54, fontSize: 16, fontWeight: FontWeight.bold)),
+          ),
+          ListTile(leading: const Icon(Icons.picture_as_pdf, color: Colors.white), title: const Text("Download as PDF", style: TextStyle(color: Colors.white)), onTap: () { Navigator.pop(context); _downloadPdf(books[index]); }),
+          ListTile(leading: const Icon(Icons.edit, color: Colors.white), title: const Text("Edit Book Title", style: TextStyle(color: Colors.white)), onTap: () { Navigator.pop(context); _showAddEditDialog(index: index); }),
+          ListTile(leading: const Icon(Icons.delete, color: Colors.redAccent), title: const Text("Delete Book", style: TextStyle(color: Colors.redAccent)), onTap: () { Navigator.pop(context); books.removeAt(index); _saveBooks(); }),
+          const SizedBox(height: 20),
+        ],
       ),
     );
   }
@@ -75,93 +78,166 @@ class _HomeScreenState extends State<HomeScreen> {
     showDialog(
       context: context,
       builder: (context) => Dialog(
-        backgroundColor: Colors.transparent, // Correct placement for background color
-        elevation: 0,
-        child: _glassContainer(
-          child: Padding(
-            padding: EdgeInsets.all(20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(index == null ? "Create New Book" : "Edit Book Title", style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold)),
-                SizedBox(height: 20),
-                TextField(controller: _ctrl, style: TextStyle(color: Colors.white), decoration: InputDecoration(hintText: "Enter Title", hintStyle: TextStyle(color: Colors.white54), enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white54)))),
-                SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton(onPressed: () => Navigator.pop(context), child: Text("Cancel", style: TextStyle(color: Colors.white70))),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurpleAccent.withOpacity(0.8)),
-                      onPressed: () {
-                        if (_ctrl.text.isEmpty) return;
-                        if (index == null) {
-                          books.insert(0, {"id": DateTime.now().toString(), "title": _ctrl.text, "pages": []});
-                        } else {
-                          books[index]["title"] = _ctrl.text;
-                        }
-                        _saveBooks();
-                        Navigator.pop(context);
-                      },
-                      child: Text(index == null ? "Create" : "Save", style: TextStyle(color: Colors.white)),
-                    )
-                  ],
+        backgroundColor: const Color(0xFF33333D), // Solid Dark Dialog
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(index == null ? "Create New Book" : "Edit Book Title", style: const TextStyle(fontSize: 22, color: Colors.white, fontWeight: FontWeight.bold, fontFamily: 'Georgia')),
+              const SizedBox(height: 20),
+              TextField(
+                controller: _ctrl, 
+                style: const TextStyle(color: Colors.white), 
+                decoration: const InputDecoration(
+                  hintText: "Enter Title", 
+                  hintStyle: TextStyle(color: Colors.white54), 
+                  enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white54)),
+                  focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Color(0xFFD4AF37))), // Gold highlight
                 )
-              ],
-            ),
+              ),
+              const SizedBox(height: 30),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel", style: TextStyle(color: Colors.white70))),
+                  const SizedBox(width: 10),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFD4AF37), // Luxury Gold Button
+                      foregroundColor: Colors.black,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    ),
+                    onPressed: () {
+                      if (_ctrl.text.isEmpty) return;
+                      if (index == null) {
+                        books.insert(0, {"id": DateTime.now().toString(), "title": _ctrl.text, "pages": []});
+                      } else {
+                        books[index]["title"] = _ctrl.text;
+                      }
+                      _saveBooks();
+                      Navigator.pop(context);
+                    },
+                    child: Text(index == null ? "Create Book" : "Save Changes", style: const TextStyle(fontWeight: FontWeight.bold)),
+                  )
+                ],
+              )
+            ],
           ),
         ),
       ),
     );
   }
 
-  Widget _glassContainer({required Widget child}) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(15),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-        child: Container(
-          decoration: BoxDecoration(color: Colors.white.withOpacity(0.1), borderRadius: BorderRadius.circular(15), border: Border.all(color: Colors.white.withOpacity(0.2))),
-          child: child,
+  // YAHAN HAI LUXURY BOOK KA ASLI DESIGN
+  Widget _buildLuxuryBookCard(String title) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFF4E342E), Color(0xFF3E2723)], // Dark Leather Brown Gradient
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
+        borderRadius: const BorderRadius.only(
+          topRight: Radius.circular(12),
+          bottomRight: Radius.circular(12),
+          topLeft: Radius.circular(4),
+          bottomLeft: Radius.circular(4),
+        ),
+        boxShadow: const [
+          BoxShadow(color: Colors.black54, blurRadius: 8, offset: Offset(4, 4))
+        ],
+        border: const Border(
+          left: BorderSide(color: Color(0xFF1F100B), width: 14), // Moti Jild (Spine)
+        ),
+      ),
+      child: Stack(
+        children: [
+          // Book Title
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: Text(
+                title,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFFE8D5B5), // Elegant Gold/Off-white text
+                  fontFamily: 'Georgia',
+                  letterSpacing: 1.2,
+                  shadows: [Shadow(blurRadius: 2, color: Colors.black87, offset: Offset(1, 1))]
+                ),
+              ),
+            ),
+          ),
+          // Subtle Gold Line design (like old books)
+          Positioned(
+            left: 10, top: 15, bottom: 15,
+            child: Container(width: 1, color: Colors.white12),
+          )
+        ],
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    bool isDark = Theme.of(context).brightness == Brightness.dark;
+    bool isDark = Theme.of(context).brightness == Brightness.dark || Theme.of(context).scaffoldBackgroundColor == const Color(0xFF25252B);
+    Color textColor = isDark ? const Color(0xFFE8D5B5) : Colors.brown[900]!;
+
     return Scaffold(
-      backgroundColor: isDark ? Color(0xFF1E1E2C) : Color(0xFFF4ECD8),
-      appBar: AppBar(title: Text('My Library', style: TextStyle(fontWeight: FontWeight.bold)), backgroundColor: Colors.transparent, elevation: 0, foregroundColor: isDark ? Colors.white : Colors.brown[900]),
-      body: GridView.builder(
-        padding: EdgeInsets.all(15),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 15, mainAxisSpacing: 15, childAspectRatio: 0.75),
-        itemCount: books.length,
-        itemBuilder: (context, index) {
-          return GestureDetector(
-            onTap: () async {
-              await Navigator.push(context, MaterialPageRoute(builder: (context) => BookViewScreen(bookIndex: index, books: books)));
-              _loadData();
-            },
-            onLongPress: () => _showBookOptions(index),
-            child: _glassContainer(
-              child: Center(
-                child: Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Text(books[index]["title"], textAlign: TextAlign.center, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white, shadows: [Shadow(blurRadius: 5, color: Colors.black54)])),
-                ),
-              ),
-            ),
-          );
-        },
+      appBar: AppBar(
+        title: Text('My Library', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26, letterSpacing: 1.5)), 
+        backgroundColor: Colors.transparent, 
+        elevation: 0, 
+        foregroundColor: textColor,
+        centerTitle: true,
       ),
+      drawer: Drawer(
+        backgroundColor: const Color(0xFF25252B),
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: const BoxDecoration(color: Color(0xFF1F100B)), // Dark Brown header
+              child: const Text('App Settings', style: TextStyle(color: Color(0xFFD4AF37), fontSize: 24, fontFamily: 'Georgia', fontWeight: FontWeight.bold)),
+            ),
+            ListTile(leading: const Icon(Icons.menu_book, color: Colors.white70), title: const Text('Premium Dark (Default)', style: TextStyle(color: Colors.white)), onTap: () => MyLibraryApp.of(context)?.changeTheme(0)),
+            ListTile(leading: const Icon(Icons.dark_mode, color: Colors.white70), title: const Text('Pitch Black', style: TextStyle(color: Colors.white)), onTap: () => MyLibraryApp.of(context)?.changeTheme(1)),
+            ListTile(leading: const Icon(Icons.wb_sunny, color: Colors.white70), title: const Text('Classic White', style: TextStyle(color: Colors.white)), onTap: () => MyLibraryApp.of(context)?.changeTheme(2)),
+          ],
+        ),
+      ),
+      body: books.isEmpty 
+        ? Center(child: Text("Library is empty.\nTap + to create a book.", textAlign: TextAlign.center, style: TextStyle(color: textColor.withOpacity(0.6), fontSize: 18)))
+        : GridView.builder(
+            padding: const EdgeInsets.all(20),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2, 
+              crossAxisSpacing: 25, 
+              mainAxisSpacing: 25, 
+              childAspectRatio: 0.70 // Lamba book shape
+            ),
+            itemCount: books.length,
+            itemBuilder: (context, index) {
+              return GestureDetector(
+                onTap: () async {
+                  await Navigator.push(context, MaterialPageRoute(builder: (context) => BookViewScreen(bookIndex: index, books: books)));
+                  _loadData();
+                },
+                onLongPress: () => _showBookOptions(index),
+                child: _buildLuxuryBookCard(books[index]["title"]),
+              );
+            },
+          ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _showAddEditDialog,
-        icon: Icon(Icons.add),
-        label: Text("New Book"),
-        foregroundColor: Colors.white,
-        backgroundColor: Colors.deepPurpleAccent.withOpacity(0.8),
+        icon: const Icon(Icons.add, color: Colors.black),
+        label: const Text("New Book", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+        backgroundColor: const Color(0xFFD4AF37), // Luxury Gold FAB
+        elevation: 6,
       ),
     );
   }
